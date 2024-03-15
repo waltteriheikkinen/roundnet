@@ -1,6 +1,4 @@
-import pandas as pd
 import json
-import matplotlib.pyplot as plt
 from pathlib import Path
 import statistics
 
@@ -40,6 +38,7 @@ for session in trainingsessions:
             heartRatesAvg.append(exercise['heartRate']['avg'])
             heartRatesMax.append(exercise['heartRate']['max'])
             counter += 1
+
 
 
 avgMin = round(statistics.mean(heartRatesMin))
