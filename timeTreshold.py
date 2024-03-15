@@ -1,17 +1,17 @@
 import json
 from pathlib import Path
 import statistics
-import pandas as pd
-import matplotlib.pyplot as plt
+
+#This script analyses the time spent above aerobic and anaerobic thresholds during roundnet
 
 #Add values depending on interest
-sport = "TENNIS"
+sport = "TENNIS" #Roundnet games have been logged as Tennis in polar system
 aerk = 150
 anak = 175
 hrMax = 195
 
 # Directory path for dataset
-path = r'C:\Users\Käyttäjä\Documents\generalData\polar-user-data-export_923497a7-d67d-4c58-a451-cc9d6c40244b'
+path = r'C:\Users\Käyttäjä\Documents\generalData\roundnetanalyysipaketti'
 
 directory = Path(path)
 trainingsessions = []
@@ -23,6 +23,8 @@ for file in directory.iterdir():
 
 #Counter for number of sessions
 counter = 0
+aboveAerkList = []
+aboveAnakList = []
 
 #Loop through all training sessions that contain data for wanted sport and extract heart rate variables
 for session in trainingsessions:
@@ -32,6 +34,7 @@ for session in trainingsessions:
     f = open(pathsession)
     data = json.load(f)
     
+    #Loop through selected data file
     for exercise in data['exercises']:
         #check for wanted sport
         if exercise['sport'] == sport:
@@ -42,27 +45,26 @@ for session in trainingsessions:
                 if 'value' in sample and sample['value'] >= anak:
                     countAnak += 1
             counter += 1
-            timeAboveAerk = countAerk / len(heartRate)
-            timeAboveAnak = countAnak / len(heartRate)
-    if counter > 1: break
+            timeAboveAerk = round(countAerk / len(heartRate) * 100, 1)
+            timeAboveAnak = round(countAnak / len(heartRate) * 100, 1)
+            aboveAerkList.append(timeAboveAerk)
+            aboveAnakList.append(timeAboveAnak)
+            #Print files with big values for closer examination
+            #if timeAboveAerk > 10: 
+                #print(session)
+                #print(timeAboveAerk)
+                #print(timeAboveAnak)
 
-print(timeAboveAerk)
-print(timeAboveAnak)
 
-'''
-print("")
-print("subject aerobic treshold: ", aerk)
-print("subject anaerobic treshold: ", anak)
-print("subject maximum heart rate: ", hrMax)
-print("")
+avgTimeAboveAerk = round(statistics.mean(aboveAerkList), 1)
+stdTimeAboveAerk = round(statistics.stdev(aboveAerkList), 1)
+
+avgTimeAboveAnak = round(statistics.mean(aboveAnakList), 1)
+stdTimeAboveAnak = round(statistics.stdev(aboveAnakList), 1)
+
 print("Number of sessions: ", counter)
 print("")
-print(f"Average minimum heart rate: {avgMin}, sd: {stdMin}")
+print(f"Average time above aerobic threshold: {avgTimeAboveAerk} % sd: {stdTimeAboveAerk}")
 print("")
-print(f"Average heart rate: {avgAvg}, sd: {stdAvg}")
+print(f"Average time above anaerobic threshold: {avgTimeAboveAnak} % sd: {stdTimeAboveAnak}")
 print("")
-print(f"Average maximum heart rate: {avgMax}, sd: {stdMax}")
-print("")
-'''    
-
-

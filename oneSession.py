@@ -4,8 +4,12 @@ import matplotlib.pyplot as plt
 
 #This script analyzes one session of playing roundnet from data extracted from Polar Flow
 
-#Open file and define file path
-f = open(r'C:\Users\Käyttäjä\koodit\pyyttoni\roundnet\roundnet\spiketreeni.json')
+#Define path 
+session = r"spiketreeni2.json"
+path = r'C:\Users\Käyttäjä\koodit\pyyttoni\roundnet\roundnet'
+
+#Open file
+f = open(path + "\\" + session)
 data = json.load(f)
 
 #Add subject and session information to a table
